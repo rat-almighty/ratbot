@@ -1,0 +1,18 @@
+[project]
+name = "ratbot"
+version = "0.1.0"
+description = "the ONLY discord bot"
+readme = "README.md"
+authors = [{ name = "Ernie Izdebski", email = "izdebski@andrews.edu" }]
+requires-python = ">=3.14"
+dependencies = ["cyclopts>=4.20.0"]
+
+[project.scripts]
+ratbot = "ratbot:app"
+
+[build-system]
+requires = ["uv_build>=0.11.6,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = ["basedpyright>=1.39.9"]

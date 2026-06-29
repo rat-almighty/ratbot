@@ -1,0 +1,34 @@
+default_install_hook_types: ["pre-commit", "pre-push"]
+repos:
+  # General fixes
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v6.0.0"
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+        args: [--py314-plus]
+  # Python linting & formatting
+  - repo: https://github.com/DetachHead/basedpyright-prek-mirror
+    rev: 1.39.9
+    hooks:
+      - id: basedpyright
+        name: pyright
+        additional_dependencies:
+          - cyclopts>=4.20.0
+        pass_filenames: false
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.20
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/PyCQA/isort
+    rev: "9.0.0a3"
+    hooks:
+      - id: isort
+# TODO: add pytest

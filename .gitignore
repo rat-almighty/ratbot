@@ -1,0 +1,16 @@
+# Editor settings
+.exrc
+.idea/
+.nvim.lua
+.nvimrc
+.vscode/
+
+# Python-generated files
+*.egg-info
+*.py[oc]
+.venv
+__pycache__/
+build/
+dist/
+environments
+wheels/
