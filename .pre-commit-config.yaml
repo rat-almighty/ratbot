@@ -20,6 +20,10 @@ repos:
         name: pyright
         additional_dependencies:
           - cyclopts>=4.20.0
+          - discord-py>=2.7.1
+          - platformdirs>=4.10.0
+          - pydantic>=2.13.4
+          - pyyaml>=6.0.3
         pass_filenames: false
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.20
