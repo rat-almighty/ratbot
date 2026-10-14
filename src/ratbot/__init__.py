@@ -6,11 +6,18 @@ __version__ = "0.1.0"
 
 
 import logging
+from contextlib import suppress
 from pathlib import Path
-from typing import ClassVar, NewType
+from typing import ClassVar
+from typing import NewType
 
-import discord
 from cyclopts import App
+from discord import Forbidden
+from discord import NotFound
+from discord.utils import setup_logging
+
+import ratcore as rc
+from ratcore import Message
 
 from .model import YamlModel
 from .paths import CONFIG_DIRECTORY
@@ -39,6 +46,8 @@ def init(main: Token, devel: Token | None = None, /) -> None:
 @app.default
 def start() -> None:
     """Start the application."""
+    setup_logging()
+
     try:
         token = Tokens.load().main
     except FileNotFoundError:
@@ -50,29 +59,44 @@ def start() -> None:
         )
         sys.exit(1)
 
-    intents = discord.Intents.default()
+    intents = rc.Intents.default()
+    intents.expressions = True
+    intents.messages = True
     intents.message_content = True
 
-    client = discord.Client(intents=intents)
+    client = rc.Bot(("r.", "rat "), intents=intents)
 
     @client.event
     async def on_ready():
         log.info(f"Logged in as user: {client.user}")
 
     @client.event
-    async def on_message(message: discord.Message):
+    async def on_message(message: Message):
         if message.author.bot:
             return
 
-        channel_name: str | None = getattr(message.channel, "name", None)
-        if channel_name == "rat":
+        ctx = await client.get_context(message)
+
+        if ctx.chname == "rat":
             if message.content == "rat" and not message.attachments:
                 _ = await message.channel.send("rat")
             else:
-                await message.delete()
+                with suppress(Forbidden, NotFound):
+                    await message.delete()
+        else:
+            ctx = await client.get_context(message)
+            log.warning(f"{ctx.__module__ = }")
+            if ctx.command is not None:
+                await client.invoke(ctx)
+            elif message.content.startswith("rat"):
+                _ = await message.channel.send("rat")
+
+    @client.event
+    async def on_message_edit(_before: Message, message: Message):
+        if message.author.bot:
             return
+        log.warning(f"{message = }")
+        if getattr(message.channel, "name", None) == "rat":
+            await message.delete()
 
-        if message.content.startswith("rat"):
-            _ = await message.channel.send("rat")
-
-    client.run(token)
+    client.run(token, log_handler=None)
