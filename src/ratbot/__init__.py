@@ -47,7 +47,7 @@ def start() -> None:
             f"Please run `{sys.argv[0]} init` to perform configuration.",
             sep="\n",
         )
-        exit(1)
+        sys.exit(1)
 
     intents = discord.Intents.default()
     intents.message_content = True
@@ -55,11 +55,11 @@ def start() -> None:
     client = discord.Client(intents=intents)
 
     @client.event
-    async def on_ready():  # pyright: ignore[reportUnusedFunction]
+    async def on_ready():
         print(f"Logged in as user: {client.user}")
 
     @client.event
-    async def on_message(message: discord.Message):  # pyright: ignore[reportUnusedFunction]
+    async def on_message(message: discord.Message):
         if message.author.bot:
             return
 

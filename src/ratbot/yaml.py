@@ -1,7 +1,7 @@
 """Slight improvements to the `pyyaml` API."""
 # pyright: reportAny = false
 
-__all__ = ["Document", "full_load", "dump"]
+__all__ = ["Document", "dump", "full_load"]
 
 import os
 from pathlib import Path

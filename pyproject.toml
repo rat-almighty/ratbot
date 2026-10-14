@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "the ONLY discord bot"
 readme = "README.md"
 authors = [{ name = "Ernie Izdebski", email = "izdebski@andrews.edu" }]
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = [
     "cyclopts>=4.20.0",
     "discord-py>=2.7.1",
@@ -40,4 +40,4 @@ line_length = 90
 
 [tool.basedpyright]
 reportImplicitStringConcatenation = false
-pythonVersion = "3.14"
+pythonVersion = "3.15"

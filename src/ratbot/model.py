@@ -3,7 +3,7 @@ from typing import ClassVar, Self, cast
 
 from pydantic import BaseModel
 
-import ratbot.yaml as yaml
+import ratbot.yaml as yaml  # noqa: PLR0402, this causes an import cycle
 
 
 class Model(BaseModel):
