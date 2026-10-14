@@ -63,6 +63,14 @@ def start() -> None:
         if message.author.bot:
             return
 
+        channel_name: str | None = getattr(message.channel, "name", None)
+        if channel_name == "rat":
+            if message.content == "rat" and not message.attachments:
+                _ = await message.channel.send("rat")
+            else:
+                await message.delete()
+            return
+
         if message.content.startswith("rat"):
             _ = await message.channel.send("rat")
 
