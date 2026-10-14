@@ -5,6 +5,7 @@ __license__ = "MIT"
 __version__ = "0.1.0"
 
 
+import logging
 from pathlib import Path
 from typing import ClassVar, NewType
 
@@ -14,9 +15,10 @@ from cyclopts import App
 from .model import YamlModel
 from .paths import CONFIG_DIRECTORY
 
-app = App()
-
 Token = NewType("Token", str)
+
+app = App()
+log = logging.getLogger(__name__)
 
 
 class Tokens(YamlModel):
@@ -42,10 +44,9 @@ def start() -> None:
     except FileNotFoundError:
         import sys
 
-        print(
-            f"The `{Tokens.__model_path__.name}` file was not found.",
-            f"Please run `{sys.argv[0]} init` to perform configuration.",
-            sep="\n",
+        log.critical(
+            f"The `{Tokens.__model_path__.name}` file was not found.\n"
+            f"Please run `{sys.argv[0]} init` to perform configuration."
         )
         sys.exit(1)
 
@@ -56,7 +57,7 @@ def start() -> None:
 
     @client.event
     async def on_ready():
-        print(f"Logged in as user: {client.user}")
+        log.info(f"Logged in as user: {client.user}")
 
     @client.event
     async def on_message(message: discord.Message):
