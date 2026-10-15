@@ -18,6 +18,7 @@ from discord.utils import setup_logging
 
 import ratcore as rc
 from ratcore import Message
+from ratcore import get_plugins
 
 from .model import YamlModel
 from .paths import CONFIG_DIRECTORY
@@ -70,6 +71,12 @@ def start() -> None:
     async def on_ready():
         log.info(f"Logged in as user: {client.user}")
 
+        n = 0
+        for n, plugin in enumerate(get_plugins(), start=1):
+            await client.load_extension(plugin)
+            log.info(f"Loaded plugin: {plugin}")
+        log.info(f"Loaded {n} plugin" + ("s" if n != 1 else "") + "!")
+
     @client.event
     async def on_message(message: Message):
         if message.author.bot:
@@ -84,18 +91,14 @@ def start() -> None:
                 with suppress(Forbidden, NotFound):
                     await message.delete()
         else:
-            ctx = await client.get_context(message)
-            log.warning(f"{ctx.__module__ = }")
-            if ctx.command is not None:
-                await client.invoke(ctx)
-            elif message.content.startswith("rat"):
+            if message.content.startswith("rat"):
                 _ = await message.channel.send("rat")
+            await client.invoke(ctx)
 
     @client.event
     async def on_message_edit(_before: Message, message: Message):
         if message.author.bot:
             return
-        log.warning(f"{message = }")
         if getattr(message.channel, "name", None) == "rat":
             await message.delete()
 
