@@ -26,13 +26,13 @@ repos:
           - pyyaml>=6.0.3
         pass_filenames: false
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.0
+    rev: v0.17.5
     hooks:
       - id: ruff-check
         args: [--fix]
       - id: ruff-format
   - repo: https://github.com/PyCQA/isort
-    rev: "9.0.2"
+    rev: "10.0.0b2"
     hooks:
       - id: isort
 # TODO: add pytest

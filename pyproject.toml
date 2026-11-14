@@ -22,7 +22,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "basedpyright>=1.39.9",
+    "basedpyright>=1.40.2",
     "pip>=26.2.1",
 ]
 

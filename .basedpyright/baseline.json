@@ -10,6 +10,32 @@
                 }
             }
         ],
+        "./src/ratbot/__init__.py": [
+            {
+                "code": "reportUnusedFunction",
+                "range": {
+                    "startColumn": 14,
+                    "endColumn": 22,
+                    "lineCount": 1
+                }
+            },
+            {
+                "code": "reportUnusedFunction",
+                "range": {
+                    "startColumn": 14,
+                    "endColumn": 24,
+                    "lineCount": 1
+                }
+            },
+            {
+                "code": "reportUnusedFunction",
+                "range": {
+                    "startColumn": 14,
+                    "endColumn": 29,
+                    "lineCount": 1
+                }
+            }
+        ],
         "./src/ratcore/__init__.py": [
             {
                 "code": "reportMissingTypeStubs",
