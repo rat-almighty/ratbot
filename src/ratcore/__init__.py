@@ -1,5 +1,8 @@
 __all__ = [
     "Bot",
+    "CheckFailure",
+    "Cog",
+    "CommandInvokeError",
     "Context",
     "ContextABC",
     "Intents",
@@ -7,13 +10,13 @@ __all__ = [
     "Message",
     "command",
     "get_ext_path",
+    "is_owner",
     "text_command",
 ]
 
 import sys
 from collections import deque
 from collections.abc import Iterator
-from collections.abc import Sequence
 from functools import cache
 from pathlib import Path
 
@@ -21,12 +24,16 @@ from discord import Intents
 from discord import Interaction
 from discord import Message
 from discord.app_commands import command
+from discord.ext.commands import CheckFailure
+from discord.ext.commands import Cog
+from discord.ext.commands import CommandInvokeError
 from discord.ext.commands import command as text_command
+from discord.ext.commands import is_owner
 
 from .bot import Bot
 from .context import Context as ContextABC
 
-Context = ContextABC[Bot]
+type Context = ContextABC[Bot]
 
 
 @cache
