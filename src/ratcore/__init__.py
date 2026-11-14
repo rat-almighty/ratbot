@@ -10,6 +10,7 @@ __all__ = [
     "Message",
     "command",
     "get_ext_path",
+    "hybrid_command",
     "is_owner",
     "text_command",
 ]
@@ -28,6 +29,7 @@ from discord.ext.commands import CheckFailure
 from discord.ext.commands import Cog
 from discord.ext.commands import CommandInvokeError
 from discord.ext.commands import command as text_command
+from discord.ext.commands import hybrid_command
 from discord.ext.commands import is_owner
 
 from .bot import Bot

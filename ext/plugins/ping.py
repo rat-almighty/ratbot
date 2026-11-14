@@ -30,16 +30,18 @@ class Admin(Cog):
     def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
-    @rc.text_command()
+    @rc.hybrid_command()
     async def ping(self, ctx: Context):
         """pong"""
         _ = await ctx.reply("pong")
 
     @rc.text_command()
     @is_owner()
-    async def sync(self, _ctx: Context) -> None:
+    async def sync(self, ctx: Context) -> None:
         """Synchronizes the command list."""
-        raise NotImplementedError()
+        cmds = await self.bot.tree.sync()
+        s = "" if len(cmds) == 1 else "s"
+        _ = await ctx.reply(f"Synced {len(cmds)} command{s}!")
 
     @Cog.listener()
     async def on_command_error(self, ctx: Context, err: Exception):
