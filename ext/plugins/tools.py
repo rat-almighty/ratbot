@@ -1,3 +1,5 @@
+import asyncio
+import asyncio.subprocess as process
 import logging
 import re
 from asyncio import Semaphore
@@ -64,7 +66,7 @@ async def _compile_latex(tmp_dir: Path, _expr: str) -> bytes:
         tmp_dir.as_posix(),
         "--",
     )
-    raise NotImplementedError()
+    raise NotImplementedError("_compile_latex function")
 
 
 async def compile_latex(expr: str):
@@ -91,9 +93,45 @@ def concurrency_limit(n: int):
     return limiter
 
 
+@final
+class CompileError(RuntimeError):
+    def __init__(self, code: int, stderr: str, kind: LiteralString = "Process"):
+        super().__init__(
+            f"{kind} failed with error code {code}:\n" + "```\n" + stderr + "```"
+        )
+        self.code = code
+        self.stderr = stderr
+
+
 @concurrency_limit(4)
-async def compile_typst(_expr: str, /) -> bytes:
-    raise NotImplementedError("compile_typst")
+async def compile_typst(
+    body: str, /, jobs: int = 2, ppi: int = 300, timeout: int = 15
+) -> bytes:
+    with TemporaryDirectory() as root:
+        Path(root).mkdir(exist_ok=True)
+        assert Path(root).is_dir()
+        proc = await process.create_subprocess_exec(
+            "typst",
+            "compile",
+            "--format=png",
+            f"--{root=!s}",
+            f"--{jobs=}",
+            f"--{ppi=}",
+            "-",
+            "-",
+            stdin=process.PIPE,
+            stdout=process.PIPE,
+            stderr=process.PIPE,
+        )
+        stdout, stderr = await asyncio.wait_for(proc.communicate(body.encode()), timeout)
+        code = proc.returncode
+        assert Path(root).is_dir()
+    if code:
+        raise CompileError(code, stderr.decode(), kind="Typst compilation")
+    return stdout
+
+
+TYPST_PRELUDE = Path(__file__).with_name("typst_prelude.typ").read_text() + "\n"
 
 
 @final
@@ -113,7 +151,9 @@ class Tools(Cog):
             return
 
         code_blocks: list[str] = re.findall(
-            r"```typ(?:st)?\s*\n(.+)\s*```", message.content, re.DOTALL | re.IGNORECASE
+            r"```typ(?:st)?\s*\n((?:[^`]|`[^`]|``[^`])+)\s*```",
+            message.content,
+            re.DOTALL | re.IGNORECASE,
         )
         if not code_blocks:
             return
@@ -122,7 +162,7 @@ class Tools(Cog):
             for i, block in enumerate(code_blocks):
                 if block and block[-1] == "\n":
                     block = block[: len(block) - 1]
-                image = BytesIO(await compile_typst(block))
+                image = BytesIO(await compile_typst(TYPST_PRELUDE + block))
                 images.append(File(image, f"typst-output-{i}.png"))
             if images:
                 _ = await message.reply(files=images)
