@@ -101,6 +101,27 @@ wheels = [
 ]
 
 [[package]]
+name = "anyio"
+version = "4.16.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "idna" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a1/98/7e457a3b014976887a050561955c0b76e1e7e2d6e27b78ecef2ef80518f2/anyio-4.16.0.tar.gz", hash = "sha256:59bb03251907983d1603d27c3087ddb1e93299ea2163adcdba37899a4fb12ffb", size = 310971, upload-time = "2026-11-01T11:20:07.282Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a9/16/7757fb84c819accc7d7e9af5291b261e4abb8627ee040f99e7d35ef2457a/anyio-4.16.0-py3-none-any.whl", hash = "sha256:c66ae634e0b8228396b801741beb3294326d4b6102f7bba4041c0dfb58c29026", size = 134521, upload-time = "2026-11-01T11:20:05.59Z" },
+]
+
+[[package]]
+name = "async-lru"
+version = "2.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8f/43/9d22679e8dd0ed965182cca990d32c68b150730cce8046ad61b3179b5b7a/async_lru-2.4.0.tar.gz", hash = "sha256:b0b0077d9b7596615b3c12d0aad4f6aeccaaa0ac75ceae472608ede89e764c08", size = 22927, upload-time = "2026-10-12T18:12:54.276Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ec/0b/6a817103fb78faca4970c686a61065047da7226aba0d7cae6d4299b20c59/async_lru-2.4.0-py3-none-any.whl", hash = "sha256:1b46a96419ef91fe11431d58db98d792c9b4250001427191a40faf1031934212", size = 10045, upload-time = "2026-10-12T18:12:53.091Z" },
+]
+
+[[package]]
 name = "attrs"
 version = "26.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -223,6 +244,24 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e0/4d/f332313098c1de1b2d2ff91cf2674415cc7cddab2ca1b01ae29774bd5fdf/docstring_parser-0.18.0.tar.gz", hash = "sha256:292510982205c12b1248696f44959db3cdd1740237a968ea1e2e7a900eeb2015", size = 29341, upload-time = "2026-04-14T04:09:19.867Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a7/5f/ed01f9a3cdffbd5a008556fc7b2a08ddb1cc6ace7effa7340604b1d16699/docstring_parser-0.18.0-py3-none-any.whl", hash = "sha256:b3fcbed555c47d8479be0796ef7e19c2670d428d72e96da63f3a40122860374b", size = 22484, upload-time = "2026-04-14T04:09:18.638Z" },
+]
+
+[[package]]
+name = "evilutils"
+version = "0.3.1a2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/bd/40/6619bf2f42625223000b70923717c34b1a62caebde5fb21f58ed09dfc505/evilutils-0.3.1a2.tar.gz", hash = "sha256:47fd5d31c9efe444c1f66f01c3f2feffc8b76bb5e0d4847fe639bc4c568d1a1a", size = 12551, upload-time = "2026-11-20T20:57:21.662Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/97/e4/ae49be656f02a3110bb81ca7bcaebcab63da80dc24ef4e9ea887dbff8026/evilutils-0.3.1a2-py3-none-any.whl", hash = "sha256:9858bf195f258ce3bb2cc4c80e238a304b35a4c03189ed6106f980e7c790a0f4", size = 17398, upload-time = "2026-11-20T20:57:20.748Z" },
+]
+
+[package.optional-dependencies]
+async = [
+    { name = "anyio" },
+    { name = "async-lru" },
 ]
 
 [[package]]
@@ -662,6 +701,7 @@ dependencies = [
     { name = "aiofiles" },
     { name = "cyclopts" },
     { name = "discord-py" },
+    { name = "evilutils", extra = ["async"] },
     { name = "frozenlist" },
     { name = "matplotlib" },
     { name = "platformdirs" },
@@ -680,6 +720,7 @@ requires-dist = [
     { name = "aiofiles", specifier = ">=25.1.0" },
     { name = "cyclopts", specifier = ">=4.20.0" },
     { name = "discord-py", specifier = ">=2.7.1" },
+    { name = "evilutils", extras = ["async"], specifier = ">=0.3.1a2" },
     { name = "frozenlist", specifier = ">=1.8.0" },
     { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "platformdirs", specifier = ">=4.10.0" },

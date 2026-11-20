@@ -2,13 +2,9 @@ import asyncio
 import asyncio.subprocess as process
 import logging
 import re
-from asyncio import Semaphore
-from collections.abc import Awaitable
-from collections.abc import Callable
 from datetime import UTC
 from datetime import datetime as DateTime
 from functools import partial
-from functools import wraps
 from io import BytesIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -16,6 +12,7 @@ from typing import LiteralString
 from typing import final
 
 from discord.file import File
+from evilaio import concurrency_limit
 from frozenlist import FrozenList as flist
 
 import ratcore as rc
@@ -28,8 +25,8 @@ log = logging.getLogger(__name__)
 now = partial(DateTime.now, tz=UTC)
 
 
-MAX_CONCURRENT_LATEX_THREADS = Semaphore(4)
-MAX_CONCURRENT_TYPST_THREADS = Semaphore(4)
+MAX_CONCURRENT_LATEX_THREADS = 4
+MAX_CONCURRENT_TYPST_THREADS = 4
 
 BASE_COMMAND: flist[LiteralString] = flist(
     (
@@ -57,40 +54,19 @@ for path in ("/usr", "/lib", "/lib64", "/var/lib/texmf"):
 BASE_COMMAND.freeze()
 
 
-async def _compile_latex(tmp_dir: Path, _expr: str) -> bytes:
-    _command = (
-        *BASE_COMMAND,
-        "--bind",
-        tmp_dir.as_posix(),
-        "--chdir",
-        tmp_dir.as_posix(),
-        "--",
-    )
-    raise NotImplementedError("_compile_latex function")
-
-
-async def compile_latex(expr: str):
-    async with MAX_CONCURRENT_LATEX_THREADS:
-        with TemporaryDirectory() as dir:
-            retval = await _compile_latex(Path(dir), expr)
-    return retval
-
-
-def concurrency_limit(n: int):
-    """Limit a function to `n` concurrent invocations."""
-
-    def limiter[**P, RT](fn: Callable[P, Awaitable[RT]]) -> Callable[P, Awaitable[RT]]:
-        LIMIT = Semaphore(n)
-
-        @wraps(fn)
-        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> RT:
-            async with LIMIT:
-                rv = await fn(*args, **kwargs)
-            return rv
-
-        return wrapper
-
-    return limiter
+@concurrency_limit(MAX_CONCURRENT_LATEX_THREADS)
+async def compile_latex(_expr: str):
+    with TemporaryDirectory() as tmp_dir:
+        tmp_dir = Path(tmp_dir)
+        _command = (
+            *BASE_COMMAND,
+            "--bind",
+            tmp_dir.as_posix(),
+            "--chdir",
+            tmp_dir.as_posix(),
+            "--",
+        )
+        raise NotImplementedError("compile_latex function")
 
 
 @final

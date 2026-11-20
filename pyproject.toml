@@ -9,6 +9,7 @@ dependencies = [
     "aiofiles>=25.1.0",
     "cyclopts>=4.20.0",
     "discord-py>=2.7.1",
+    "evilutils[async]>=0.3.1a2",
     "frozenlist>=1.8.0",
     "matplotlib>=3.11.2",
     "platformdirs>=4.10.0",
