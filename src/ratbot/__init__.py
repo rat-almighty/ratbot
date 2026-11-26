@@ -67,14 +67,20 @@ def start() -> None:
 
     client = rc.Bot(("r.", "rat "), intents=intents)
 
+    plugins_loaded = False
+
     @client.event
     async def on_ready():
+        nonlocal plugins_loaded
         log.info(f"Logged in as user: {client.user}")
 
+        if plugins_loaded:
+            return
         n = 0
         for n, plugin in enumerate(get_plugins(), start=1):
             await client.load_extension(plugin)
             log.info(f"Loaded plugin: {plugin}")
+        plugins_loaded = True
         log.info(f"Loaded {n} plugin" + ("s" if n != 1 else "") + "!")
 
     @client.event
